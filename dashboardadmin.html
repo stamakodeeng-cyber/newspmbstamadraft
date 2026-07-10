@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Dashboard Admin — PPDB SMA Santa Maria Yogyakarta</title>
+  <meta name="robots" content="noindex, nofollow"/>
+  <link rel="icon" type="image/png" href="https://ik.imagekit.io/stamayk/STAMAWEB/logostama.png">
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --blue:#0b4f7a;--blue-dark:#073a5c;--blue-light:#1a7abf;
+      --gold:#d4b05a;--gold-light:#e8cd8a;--green:#4b9a6a;
+      --ivory:#fbf7f0;--muted:#6b7785;--max-width:1280px;
+      --card-shadow:0 10px 30px rgba(6,24,48,0.08);
+      --card-shadow-lg:0 20px 50px rgba(6,24,48,0.14);
+      --radius:16px;--radius-sm:10px;--input-border:#d9e0e7;
+      --input-focus:#2563eb;--error:#e0483f;--ease:cubic-bezier(.4,0,.2,1);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Nunito',system-ui,sans-serif;color:#1a2535;background:var(--ivory);font-size:14.5px;line-height:1.6;min-height:100vh}
+    body::before{
+      content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;
+      background:radial-gradient(circle at 10% 6%,rgba(11,79,122,0.05),transparent 40%),
+                 radial-gradient(circle at 90% 20%,rgba(212,176,90,0.08),transparent 45%);
+    }
+    a{color:inherit}
+    .container{max-width:var(--max-width);margin:0 auto;padding:0 20px;position:relative;z-index:1}
+    @media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+    /* ===== HEADER ===== */
+    header{background:linear-gradient(160deg,rgba(7,58,92,0.95),rgba(11,79,122,0.88));color:var(--ivory);padding:16px 0}
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:44px;height:44px;border-radius:9px;background:var(--ivory);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(2,18,32,0.25);overflow:hidden;flex-shrink:0}
+    .logo img{width:80%;height:80%;object-fit:contain}
+    .brand h1{font-family:'Merriweather',serif;font-size:15.5px;line-height:1.3}
+    .brand-tag{font-size:11.5px;color:rgba(255,255,255,0.72);margin-top:1px;letter-spacing:.03em}
+    .header-actions{display:flex;gap:8px;align-items:center}
+
+    /* ===== BUTTONS ===== */
+    .btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:9px;font-weight:800;cursor:pointer;border:none;font-family:'Nunito',sans-serif;font-size:13.5px;transition:all .2s var(--ease);white-space:nowrap}
+    .btn-primary{background:linear-gradient(90deg,#0b4f7a,#1a7abf);color:white;box-shadow:0 4px 14px rgba(11,79,122,0.22)}
+    .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(11,79,122,0.3)}
+    .btn-outline{background:rgba(255,255,255,0.08);border:1.5px solid rgba(255,255,255,0.35);color:white}
+    .btn-outline:hover{background:rgba(255,255,255,0.18)}
+    .btn-outline.light{background:white;border:1.5px solid var(--input-border);color:var(--blue)}
+    .btn-outline.light:hover{background:rgba(11,79,122,0.06)}
+    .btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important}
+    .btn-sm{padding:6px 12px;font-size:12.5px;border-radius:7px}
+
+    /* ===== LOGIN GATE ===== */
+    #login-screen{min-height:calc(100vh - 76px);display:flex;align-items:center;justify-content:center;padding:40px 20px}
+    .login-card{background:white;border-radius:var(--radius);box-shadow:var(--card-shadow-lg);padding:38px 34px;max-width:380px;width:100%;text-align:center;border:1px solid rgba(11,79,122,0.06)}
+    .login-icon{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,rgba(11,79,122,0.1),rgba(212,176,90,0.18));display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 16px}
+    .login-card h2{font-family:'Merriweather',serif;color:var(--blue);font-size:19px;margin-bottom:6px}
+    .login-card p{color:var(--muted);font-size:13px;margin-bottom:20px}
+    .login-card input{width:100%;padding:11px 14px;border:1.5px solid var(--input-border);border-radius:var(--radius-sm);font-size:14px;font-family:'Nunito',sans-serif;margin-bottom:12px}
+    .login-card input:focus{outline:none;border-color:var(--input-focus);box-shadow:0 0 0 4px rgba(37,99,235,0.1)}
+    .login-card .btn{width:100%;justify-content:center;padding:11px}
+    .login-error{color:var(--error);font-size:12.5px;font-weight:700;margin-top:10px;display:none}
+    .login-error.show{display:block}
+
+    /* ===== DASHBOARD ===== */
+    #dashboard{display:none;padding:26px 0 60px}
+    #dashboard.show{display:block}
+
+    .stats-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:22px}
+    .stat-card{background:white;border-radius:var(--radius-sm);box-shadow:var(--card-shadow);padding:16px 18px;border:1px solid rgba(11,79,122,0.05);border-left:3px solid var(--blue)}
+    .stat-card.gold{border-left-color:var(--gold)}
+    .stat-card.green{border-left-color:var(--green)}
+    .stat-num{font-family:'Merriweather',serif;font-size:26px;font-weight:900;color:var(--blue)}
+    .stat-label{font-size:12px;color:var(--muted);font-weight:700;margin-top:2px}
+
+    .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px;background:white;padding:14px 16px;border-radius:var(--radius-sm);box-shadow:var(--card-shadow);border:1px solid rgba(11,79,122,0.05)}
+    .toolbar input[type=search], .toolbar select{
+      padding:9px 12px;border:1.5px solid var(--input-border);border-radius:8px;font-family:'Nunito',sans-serif;font-size:13.5px;background:white;
+    }
+    .toolbar input[type=search]{flex:1;min-width:180px}
+    .toolbar input[type=search]:focus, .toolbar select:focus{outline:none;border-color:var(--input-focus)}
+    .toolbar .spacer{flex:1}
+    .result-count{font-size:12.5px;color:var(--muted);font-weight:700}
+
+    .table-wrap{background:white;border-radius:var(--radius);box-shadow:var(--card-shadow-lg);overflow:hidden;border:1px solid rgba(11,79,122,0.05)}
+    table{width:100%;border-collapse:collapse}
+    thead th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:800;padding:12px 14px;background:rgba(11,79,122,0.04);border-bottom:1px solid rgba(11,79,122,0.08);white-space:nowrap}
+    tbody td{padding:11px 14px;border-bottom:1px solid rgba(11,79,122,0.05);font-size:13.5px;vertical-align:middle}
+    tbody tr{cursor:pointer;transition:background .15s}
+    tbody tr:hover{background:rgba(11,79,122,0.035)}
+    tbody tr:last-child td{border-bottom:none}
+    .cell-photo{width:38px;height:38px;border-radius:50%;object-fit:cover;background:rgba(11,79,122,0.08);flex-shrink:0}
+    .cell-photo-placeholder{width:38px;height:38px;border-radius:50%;background:rgba(11,79,122,0.08);display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--muted)}
+    .cell-name{font-weight:800;color:#1a2535}
+    .cell-sub{font-size:11.5px;color:var(--muted)}
+    .badge{display:inline-block;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:800}
+    .badge.kolektif{background:rgba(212,176,90,0.18);color:#8a6a1e}
+    .badge.reguler{background:rgba(11,79,122,0.12);color:var(--blue)}
+    .badge.pindahan{background:rgba(75,154,106,0.14);color:var(--green)}
+
+    .empty-state, .loading-state{padding:60px 20px;text-align:center;color:var(--muted)}
+    .empty-state .icon, .loading-state .icon{font-size:38px;margin-bottom:10px;opacity:.6}
+    .spinner{width:30px;height:30px;border:3px solid rgba(11,79,122,0.15);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* ===== MODAL ===== */
+    #modal-overlay{position:fixed;inset:0;background:rgba(7,20,35,0.55);backdrop-filter:blur(2px);display:none;align-items:flex-start;justify-content:center;z-index:1000;padding:40px 16px;overflow-y:auto}
+    #modal-overlay.show{display:flex;animation:fadeIn .2s var(--ease)}
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+    .modal{background:white;border-radius:var(--radius);max-width:760px;width:100%;box-shadow:var(--card-shadow-lg);animation:modalIn .25s var(--ease)}
+    @keyframes modalIn{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+    .modal-header{display:flex;align-items:center;gap:16px;padding:24px 26px;border-bottom:1px solid rgba(11,79,122,0.08);position:sticky;top:0;background:white;border-radius:var(--radius) var(--radius) 0 0}
+    .modal-photo{width:64px;height:64px;border-radius:50%;object-fit:cover;background:rgba(11,79,122,0.08);flex-shrink:0}
+    .modal-photo-placeholder{width:64px;height:64px;border-radius:50%;background:rgba(11,79,122,0.08);display:flex;align-items:center;justify-content:center;font-size:26px;color:var(--muted);flex-shrink:0}
+    .modal-title{font-family:'Merriweather',serif;font-size:19px;color:var(--blue);margin-bottom:3px}
+    .modal-close{margin-left:auto;background:rgba(11,79,122,0.06);border:none;width:32px;height:32px;border-radius:50%;font-size:16px;cursor:pointer;color:var(--blue);flex-shrink:0}
+    .modal-close:hover{background:rgba(11,79,122,0.12)}
+    .modal-body{padding:22px 26px 28px}
+    .modal-group{margin-bottom:20px}
+    .modal-group-title{font-size:12.5px;font-weight:800;color:var(--blue);text-transform:uppercase;letter-spacing:.05em;background:rgba(11,79,122,0.05);padding:7px 11px;border-radius:7px;border-left:3px solid var(--gold);margin-bottom:12px}
+    .modal-fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .modal-field-full{grid-column:1/-1}
+    .modal-field dt{font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.03em;margin-bottom:2px}
+    .modal-field dd{font-size:13.5px;color:#1a2535;font-weight:600;word-break:break-word}
+
+    #toast{position:fixed;bottom:24px;right:24px;background:#1a2535;color:white;padding:13px 20px;border-radius:10px;font-size:14px;font-weight:700;transform:translateY(80px);opacity:0;transition:all .35s var(--ease);z-index:9999;max-width:320px;box-shadow:0 10px 30px rgba(0,0,0,0.25)}
+    #toast.show{transform:translateY(0);opacity:1}
+    #toast.error{background:#b91c1c}
+    #toast.success{background:#1f7a4d}
+
+    @media(max-width:1000px){
+      .stats-grid{grid-template-columns:repeat(2,1fr)}
+      .table-wrap{overflow-x:auto}
+      table{min-width:820px}
+    }
+    @media(max-width:640px){
+      .stats-grid{grid-template-columns:1fr 1fr}
+      .modal-fields{grid-template-columns:1fr}
+      .modal-header{padding:18px}
+      .modal-body{padding:16px 18px 22px}
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="container topbar">
+    <div class="brand">
+      <div class="logo"><img src="https://ik.imagekit.io/stamayk/STAMAWEB/logostama.png" alt="STAMA logo"></div>
+      <div>
+        <h1>Dashboard Admin PPDB</h1>
+        <div class="brand-tag">SMA Santa Maria Yogyakarta</div>
+      </div>
+    </div>
+    <div class="header-actions" id="header-actions" style="display:none">
+      <button class="btn btn-outline btn-sm" id="btn-refresh">🔄 Muat Ulang</button>
+      <button class="btn btn-outline btn-sm" id="btn-export">⬇ Ekspor CSV</button>
+      <button class="btn btn-outline btn-sm" id="btn-logout">Keluar</button>
+    </div>
+  </div>
+</header>
+
+<!-- ===== LOGIN GATE ===== -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-icon">🔒</div>
+    <h2>Akses Terbatas</h2>
+    <p>Masukkan kata sandi admin untuk melihat data pendaftar PPDB.</p>
+    <input type="password" id="token-input" placeholder="Kata sandi admin" autocomplete="off">
+    <button class="btn btn-primary" id="btn-login">Masuk</button>
+    <div class="login-error" id="login-error">Kata sandi salah. Coba lagi.</div>
+  </div>
+</div>
+
+<!-- ===== DASHBOARD ===== -->
+<main id="dashboard">
+  <div class="container">
+
+    <div class="stats-grid" id="stats-grid"></div>
+
+    <div class="toolbar">
+      <input type="search" id="search-input" placeholder="Cari nama, NISN, atau sekolah...">
+      <select id="filter-jalur">
+        <option value="">Semua Jalur</option>
+        <option value="Kolektif">Kolektif</option>
+        <option value="Reguler">Reguler</option>
+        <option value="Pindahan">Pindahan</option>
+      </select>
+      <select id="filter-sekolah">
+        <option value="">Semua Sekolah</option>
+      </select>
+      <div class="spacer"></div>
+      <span class="result-count" id="result-count"></span>
+    </div>
+
+    <div class="table-wrap">
+      <div id="loading-state" class="loading-state">
+        <div class="spinner"></div>
+        Memuat data pendaftar...
+      </div>
+      <div id="empty-state" class="empty-state" style="display:none">
+        <div class="icon">🗂️</div>
+        Belum ada data yang cocok.
+      </div>
+      <table id="data-table" style="display:none">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Nama Lengkap</th>
+            <th>NISN</th>
+            <th>Sekolah Asal</th>
+            <th>Jalur</th>
+            <th>No. HP</th>
+            <th>Tanggal Daftar</th>
+          </tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+      </table>
+    </div>
+
+  </div>
+</main>
+
+<!-- ===== DETAIL MODAL ===== -->
+<div id="modal-overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <img class="modal-photo" id="modal-photo" style="display:none">
+      <div class="modal-photo-placeholder" id="modal-photo-placeholder">👤</div>
+      <div>
+        <div class="modal-title" id="modal-title">—</div>
+        <div class="cell-sub" id="modal-subtitle">—</div>
+      </div>
+      <button class="modal-close" id="modal-close">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ============================================================
+// CONFIG — same Web App URL used in admission.html
+// ============================================================
+const GAS_URL = "https://script.google.com/macros/s/AKfycbwu8ObOVE2iDIoTlBQFwVTebg9DRTmGCE0CzCHD0V98Ze2Cl8GEHwsH-cymP21udWmKWw/exec";
+
+const FIELD_LABELS = {
+  sekolah_asal:'Sekolah Asal', alamat_sekolah:'Alamat Sekolah Asal', jalur:'Jalur Pendaftaran',
+  nisn:'NISN', nik:'NIK', nama_lengkap:'Nama Lengkap', nama_panggilan:'Nama Panggilan',
+  tempat_lahir:'Tempat Lahir', tanggal_lahir:'Tanggal Lahir', agama:'Agama',
+  kewarganegaraan:'Kewarganegaraan', anak_ke:'Anak Ke-', jumlah_saudara:'Jumlah Saudara',
+  status_anak:'Status Anak',
+  alamat_asal:'Alamat Asal', telp_asal:'Telepon Rumah (Asal)', alamat_jogja:'Alamat di Yogyakarta',
+  telp_jogja:'Telepon Rumah (Yogyakarta)', hp:'No. Handphone', email:'Email', jarak_sekolah:'Jarak ke Sekolah',
+  golongan_darah:'Golongan Darah', berat_badan:'Berat Badan (kg)', tinggi_badan:'Tinggi Badan (cm)',
+  riwayat_penyakit:'Riwayat Penyakit',
+  nama_ayah:'Nama Ayah', status_ortu_ayah:'Status Orang Tua', pendidikan_ayah:'Pendidikan Terakhir',
+  pekerjaan_ayah:'Pekerjaan', penghasilan_ayah:'Penghasilan', alamat_ayah:'Alamat', hp_ayah:'No. HP',
+  nama_ibu:'Nama Ibu', status_ortu_ibu:'Status Orang Tua', pendidikan_ibu:'Pendidikan Terakhir',
+  pekerjaan_ibu:'Pekerjaan', penghasilan_ibu:'Penghasilan', alamat_ibu:'Alamat', telp_ibu:'No. Telepon',
+  nama_wali:'Nama Wali', telp_wali:'No. Telepon Wali', alamat_wali:'Alamat Wali',
+  mat_7_1:'Matematika K7S1', bind_7_1:'B. Indonesia K7S1', bing_7_1:'B. Inggris K7S1', ipa_7_1:'IPA K7S1', ips_7_1:'IPS K7S1',
+  mat_7_2:'Matematika K7S2', bind_7_2:'B. Indonesia K7S2', bing_7_2:'B. Inggris K7S2', ipa_7_2:'IPA K7S2', ips_7_2:'IPS K7S2',
+  mat_8_1:'Matematika K8S1', bind_8_1:'B. Indonesia K8S1', bing_8_1:'B. Inggris K8S1', ipa_8_1:'IPA K8S1', ips_8_1:'IPS K8S1',
+  mat_8_2:'Matematika K8S2', bind_8_2:'B. Indonesia K8S2', bing_8_2:'B. Inggris K8S2', ipa_8_2:'IPA K8S2', ips_8_2:'IPS K8S2',
+  prestasi:'Prestasi Olahraga / Seni'
+};
+
+const FIELD_GROUPS = [
+  { title: '🏫 Sekolah & Jalur', fields: ['sekolah_asal','alamat_sekolah','jalur'] },
+  { title: '📋 Identitas Diri', fields: ['nisn','nik','nama_lengkap','nama_panggilan','tempat_lahir','tanggal_lahir','agama','kewarganegaraan','anak_ke','jumlah_saudara','status_anak'] },
+  { title: '🏠 Alamat & Kontak', fields: ['alamat_asal','telp_asal','alamat_jogja','telp_jogja','hp','email','jarak_sekolah'] },
+  { title: '🏥 Kesehatan', fields: ['golongan_darah','berat_badan','tinggi_badan','riwayat_penyakit'] },
+  { title: '👨 Data Ayah', fields: ['nama_ayah','status_ortu_ayah','pendidikan_ayah','pekerjaan_ayah','penghasilan_ayah','alamat_ayah','hp_ayah'] },
+  { title: '👩 Data Ibu & Wali', fields: ['nama_ibu','status_ortu_ibu','pendidikan_ibu','pekerjaan_ibu','penghasilan_ibu','alamat_ibu','telp_ibu','nama_wali','telp_wali','alamat_wali'] },
+  { title: '📊 Nilai & Prestasi', fields: ['mat_7_1','bind_7_1','bing_7_1','ipa_7_1','ips_7_1','mat_7_2','bind_7_2','bing_7_2','ipa_7_2','ips_7_2','mat_8_1','bind_8_1','bing_8_1','ipa_8_1','ips_8_1','mat_8_2','bind_8_2','bing_8_2','ipa_8_2','ips_8_2','prestasi'] }
+];
+
+let allHeaders = [];
+let allRows = [];   // raw rows from the sheet, keyed by header text
+let filteredRows = [];
+let adminToken = '';
+
+// ---- Auth ----
+function checkStoredToken() {
+  const t = sessionStorage.getItem('ppdb_admin_token');
+  if (t) { adminToken = t; loadData(); }
+}
+
+document.getElementById('btn-login').addEventListener('click', attemptLogin);
+document.getElementById('token-input').addEventListener('keydown', (e) => { if (e.key === 'Enter') attemptLogin(); });
+
+async function attemptLogin() {
+  const val = document.getElementById('token-input').value.trim();
+  if (!val) return;
+  adminToken = val;
+  const ok = await loadData();
+  if (ok) {
+    sessionStorage.setItem('ppdb_admin_token', adminToken);
+  } else {
+    document.getElementById('login-error').classList.add('show');
+  }
+}
+
+document.getElementById('btn-logout').addEventListener('click', () => {
+  sessionStorage.removeItem('ppdb_admin_token');
+  location.reload();
+});
+
+// ---- Data loading ----
+async function loadData() {
+  document.getElementById('login-error').classList.remove('show');
+  try {
+    const url = `${GAS_URL}?action=list&token=${encodeURIComponent(adminToken)}`;
+    const res = await fetch(url);
+    const json = await res.json();
+
+    if (json.status !== 'ok') {
+      showToast(json.message || 'Gagal memuat data.', true);
+      return false;
+    }
+
+    allHeaders = json.headers;
+    allRows = json.rows;
+    showDashboard();
+    populateSekolahFilter();
+    applyFilters();
+    return true;
+  } catch (err) {
+    showToast('Tidak dapat terhubung ke server. Periksa koneksi Anda.', true);
+    return false;
+  }
+}
+
+function showDashboard() {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('dashboard').classList.add('show');
+  document.getElementById('header-actions').style.display = 'flex';
+}
+
+function populateSekolahFilter() {
+  const select = document.getElementById('filter-sekolah');
+  const unique = Array.from(new Set(allRows.map(r => r.sekolah_asal).filter(Boolean))).sort();
+  select.innerHTML = '<option value="">Semua Sekolah</option>' +
+    unique.map(s => `<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`).join('');
+}
+
+// ---- Filtering ----
+document.getElementById('search-input').addEventListener('input', applyFilters);
+document.getElementById('filter-jalur').addEventListener('change', applyFilters);
+document.getElementById('filter-sekolah').addEventListener('change', applyFilters);
+document.getElementById('btn-refresh').addEventListener('click', () => loadData());
+document.getElementById('btn-export').addEventListener('click', exportCsv);
+
+function applyFilters() {
+  const q = document.getElementById('search-input').value.trim().toLowerCase();
+  const jalur = document.getElementById('filter-jalur').value;
+  const sekolah = document.getElementById('filter-sekolah').value;
+
+  filteredRows = allRows.filter(r => {
+    if (jalur && r.jalur !== jalur) return false;
+    if (sekolah && r.sekolah_asal !== sekolah) return false;
+    if (q) {
+      const haystack = `${r.nama_lengkap||''} ${r.nisn||''} ${r.sekolah_asal||''} ${r.hp||''} ${r.email||''}`.toLowerCase();
+      if (!haystack.includes(q)) return false;
+    }
+    return true;
+  });
+
+  renderStats();
+  renderTable();
+}
+
+// ---- Stats ----
+function renderStats() {
+  const total = allRows.length;
+  const kolektif = allRows.filter(r => r.jalur === 'Kolektif').length;
+  const reguler = allRows.filter(r => r.jalur === 'Reguler').length;
+  const pindahan = allRows.filter(r => r.jalur === 'Pindahan').length;
+  const uniqueSekolah = new Set(allRows.map(r => r.sekolah_asal).filter(Boolean)).size;
+
+  document.getElementById('stats-grid').innerHTML = `
+    <div class="stat-card"><div class="stat-num">${total}</div><div class="stat-label">Total Pendaftar</div></div>
+    <div class="stat-card gold"><div class="stat-num">${kolektif}</div><div class="stat-label">Jalur Kolektif</div></div>
+    <div class="stat-card"><div class="stat-num">${reguler}</div><div class="stat-label">Jalur Reguler</div></div>
+    <div class="stat-card green"><div class="stat-num">${pindahan}</div><div class="stat-label">Jalur Pindahan</div></div>
+    <div class="stat-card"><div class="stat-num">${uniqueSekolah}</div><div class="stat-label">Sekolah Asal Berbeda</div></div>
+  `;
+}
+
+// ---- Table ----
+function renderTable() {
+  const loading = document.getElementById('loading-state');
+  const empty = document.getElementById('empty-state');
+  const table = document.getElementById('data-table');
+  const tbody = document.getElementById('table-body');
+  const resultCount = document.getElementById('result-count');
+
+  loading.style.display = 'none';
+  resultCount.textContent = `${filteredRows.length} dari ${allRows.length} pendaftar`;
+
+  if (filteredRows.length === 0) {
+    empty.style.display = 'block';
+    table.style.display = 'none';
+    return;
+  }
+  empty.style.display = 'none';
+  table.style.display = 'table';
+
+  const sorted = [...filteredRows].sort((a, b) => new Date(b.Timestamp) - new Date(a.Timestamp));
+
+  tbody.innerHTML = sorted.map((r, i) => {
+    const photoUrl = r['Foto URL'];
+    const photoCell = photoUrl
+      ? `<img class="cell-photo" src="${escapeHtml(photoUrl)}" alt="">`
+      : `<div class="cell-photo-placeholder">👤</div>`;
+    const jalurClass = r.jalur === 'Kolektif' ? 'kolektif' : r.jalur === 'Pindahan' ? 'pindahan' : 'reguler';
+    const tanggal = r.Timestamp ? new Date(r.Timestamp).toLocaleDateString('id-ID', { day:'2-digit', month:'short', year:'numeric' }) : '—';
+    return `
+      <tr data-idx="${allRows.indexOf(r)}">
+        <td>${photoCell}</td>
+        <td><div class="cell-name">${escapeHtml(r.nama_lengkap || '—')}</div><div class="cell-sub">${escapeHtml(r.nama_panggilan || '')}</div></td>
+        <td>${escapeHtml(r.nisn || '—')}</td>
+        <td>${escapeHtml(r.sekolah_asal || '—')}</td>
+        <td><span class="badge ${jalurClass}">${escapeHtml(r.jalur || '—')}</span></td>
+        <td>${escapeHtml(r.hp || '—')}</td>
+        <td>${tanggal}</td>
+      </tr>`;
+  }).join('');
+
+  tbody.querySelectorAll('tr').forEach(tr => {
+    tr.addEventListener('click', () => openModal(allRows[parseInt(tr.dataset.idx, 10)]));
+  });
+}
+
+// ---- Modal ----
+function openModal(row) {
+  document.getElementById('modal-title').textContent = row.nama_lengkap || 'Tanpa nama';
+  document.getElementById('modal-subtitle').textContent = `${row.sekolah_asal || '—'} • Jalur ${row.jalur || '—'}`;
+
+  const photo = document.getElementById('modal-photo');
+  const placeholder = document.getElementById('modal-photo-placeholder');
+  if (row['Foto URL']) {
+    photo.src = row['Foto URL'];
+    photo.style.display = 'block';
+    placeholder.style.display = 'none';
+  } else {
+    photo.style.display = 'none';
+    placeholder.style.display = 'flex';
+  }
+
+  document.getElementById('modal-body').innerHTML = FIELD_GROUPS.map(group => `
+    <div class="modal-group">
+      <div class="modal-group-title">${group.title}</div>
+      <dl class="modal-fields">
+        ${group.fields.map(f => `
+          <div class="modal-field${f.includes('alamat') || f === 'riwayat_penyakit' || f === 'prestasi' ? ' modal-field-full' : ''}">
+            <dt>${FIELD_LABELS[f] || f}</dt>
+            <dd>${escapeHtml(row[f] || '—')}</dd>
+          </div>`).join('')}
+      </dl>
+    </div>
+  `).join('');
+
+  document.getElementById('modal-overlay').classList.add('show');
+}
+document.getElementById('modal-close').addEventListener('click', closeModal);
+document.getElementById('modal-overlay').addEventListener('click', (e) => { if (e.target.id === 'modal-overlay') closeModal(); });
+function closeModal() { document.getElementById('modal-overlay').classList.remove('show'); }
+
+// ---- CSV export ----
+function exportCsv() {
+  if (filteredRows.length === 0) { showToast('Tidak ada data untuk diekspor.', true); return; }
+  const cols = allHeaders;
+  const escapeCsv = (v) => {
+    const s = v === undefined || v === null ? '' : String(v);
+    return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+  };
+  const lines = [cols.join(',')];
+  filteredRows.forEach(r => lines.push(cols.map(c => escapeCsv(r[c])).join(',')));
+  const blob = new Blob(['\uFEFF' + lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `ppdb-pendaftar-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  showToast('Berhasil mengekspor CSV.', false, true);
+}
+
+// ---- Helpers ----
+function escapeHtml(str) {
+  return String(str).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+}
+function showToast(msg, isError = false, isSuccess = false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = isError ? 'show error' : isSuccess ? 'show success' : 'show';
+  setTimeout(() => t.className = '', 3500);
+}
+
+checkStoredToken();
+</script>
+</body>
+</html>
